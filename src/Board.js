@@ -31,7 +31,7 @@
 
     _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
       return colIndex - rowIndex;
-    },
+    }, 
 
     _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
       return colIndex + rowIndex;
@@ -79,12 +79,31 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // counter
+      var counter = 0;
+      var row = this.get(rowIndex);
+      for(var i = 0; i < row.length; i++) {
+        if(row[i] === 1) {
+          counter++;
+        } 
+        if(counter > 1) {
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // iterate through rows
+      var rowLength = this.get(0).length;
+
+      for(var row = 0; row < rowLength; row++) {
+        if(this.hasRowConflictAt(row)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -94,12 +113,30 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var counter = 0;
+      var col = this.attributes;
+
+      for(var key in col) {
+        if(col[key][colIndex] === 1){
+          counter++;
+        }
+        if(counter > 1){
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var colLength = this.get(0).length;
+
+      for(var col = 0; col < colLength; col++){
+        if(this.hasColConflictAt(col)){
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -108,12 +145,35 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(majorIndex) {
+      // choose a place on board => major index => starting point
+      // limit
+      var row = 0;
+      var col = majorIndex;
+      var counter = 0;
+
+      while(col < this.attributes.n && row < this.attributes.n) {
+        if(this.attributes[row][col] === 1) {
+          counter++;
+        }
+        if(counter > 1){
+          return true;
+        }
+        row++;
+        col++;
+      }
+      return false; 
     },
 
-    // test if any major diagonals on this board contain conflicts
+    // test if any major diagonals on this board contain co\nflicts
     hasAnyMajorDiagonalConflicts: function() {
+      //start from right side and decrement left using array length.
+      var index = this.attributes.n - 1;
+      for(index; index > -index; index--){
+        if(this.hasMajorDiagonalConflictAt(index)){
+          return true;
+        }
+      }     
       return false; // fixme
     },
 
@@ -123,13 +183,33 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+    hasMinorDiagonalConflictAt: function(minorIndex) {
+      var row = 0;
+      var col = minorIndex;
+      var counter = 0;
+
+      while(col < ((this.attributes.n - 1) * 2) && row < this.attributes.n) {
+        if(this.attributes[row][col] === 1){
+          counter++;
+        }
+        if(counter > 1){
+          return true;
+        }
+        row++;
+        col--;
+      }
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var index = 0;
+      for(index; index < (this.attributes.n - 1) * 2; index++) {
+        if(this.hasMinorDiagonalConflictAt(index)){
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
