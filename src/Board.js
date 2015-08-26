@@ -96,7 +96,7 @@
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
       // iterate through rows
-      var rowLength = this.get(0).length;
+      var rowLength = this.get('n');
 
       for(var row = 0; row < rowLength; row++) {
         if(this.hasRowConflictAt(row)) {
@@ -129,7 +129,7 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      var colLength = this.get(0).length;
+      var colLength = this.get('n');
 
       for(var col = 0; col < colLength; col++){
         if(this.hasColConflictAt(col)){
@@ -169,11 +169,14 @@
     hasAnyMajorDiagonalConflicts: function() {
       //start from right side and decrement left using array length.
       var index = this.attributes.n - 1;
-      for(index; index > -index; index--){
+      var negIndex = -index;
+      for(index; index > negIndex; index--){
+     
         if(this.hasMajorDiagonalConflictAt(index)){
           return true;
         }
       }     
+
       return false; // fixme
     },
 

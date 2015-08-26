@@ -12,7 +12,7 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-/*
+
 window.findNRooksSolution = function(num) {
   var board = new Board({'n':num});
   var solution = []; //fixme
@@ -146,7 +146,7 @@ window.countNRooksSolutions = function(num) {
   console.log('Number of solutions for ' + num + ' rooks:', solutionCount);
   return solutionCount;
 };
-*/
+
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
