@@ -12,7 +12,7 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-
+/*
 window.findNRooksSolution = function(num) {
   var board = new Board({'n':num});
   var solution = []; //fixme
@@ -27,32 +27,35 @@ window.findNRooksSolution = function(num) {
   } 
 
   var recurse = function (matrix) {
-    var row = 0;
-    var col = 0;
-
     if(matrix.hasAnyRooksConflicts()){
+      
       return false;
     }
 
     if(rookCounter === num){
+      
       return matrix.rows();
     }
 
     for(row=0; row <= num - 1; row++){
       for(col=0; col <= num - 1; col++){
-        if(col === 1 && row === 1){
-
-        }
+        
         if(matrix.attributes[row][col] === 1){
+          // do nothing
         }
 
         else {
+          
           matrix.attributes[row][col] = 1;
           rookCounter++;
           var result = recurse(matrix);
 
           if(result){
+            
             return matrix;
+            
+            //increment solution counter;
+            //toggle initial rook. 
           } 
 
           else {
@@ -74,29 +77,208 @@ window.findNRooksSolution = function(num) {
 
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) {
-  var solution = undefined; //fixme
-  //
+window.countNRooksSolutions = function(num) {
+  var board = new Board({'n':num});
+  var rookCounter = 0;
+  var solutionCount = 0;
+  var rowCounter = 0;
+  var row = 0;
+
+  if (num === 1 || num === 0) {
+    return 1;
+  }
+
+  for (var i = 0; i < num - 1; i++){
+    board.attributes[rowCounter][i] = 0;
+    rowCounter++;
+  } 
+
+  var recurse = function (matrix, rowIndex) {
+
+  // check if passed matrix is valid  
+    if(rookCounter === num){
+
+      solutionCount++;
+      rowIndex--;
+
+      return;
+    }
+
+    for(var col = 0; col < num; col++) {
+      //toggle rook
+      matrix.attributes[rowIndex][col] = 1;
+      //check to see if the current board has any conflicts
+      if(matrix.hasAnyColConflicts()){
+        //due to conflict toggle off rook;
+        matrix.attributes[rowIndex][col] = 0;
+
+      }
+      else {
+    
+        rowIndex++;
+        rookCounter++;
+
+
+        recurse(matrix, rowIndex); 
+
+        rookCounter--;
+        rowIndex--;
+        matrix.attributes[rowIndex][col] = 0;
+      }
+
+    }
+
+    //start at row 0 insert rook at column 0
+    //recurse with new board
+    //start at row 1 insert rook at column 0
+    //check for conflicts and solution
+      //if there is a conflict toggle back to 0
+      
+
+  }
+
+
+  recurse(board, row);
+
+
+
   //everytime it returns true increment solutionCount
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  console.log('Number of solutions for ' + num + ' rooks:', solutionCount);
   return solutionCount;
 };
-
+*/
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
-window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+window.findNQueensSolution = function(num) {
+  var solution = []; 
+  var board = new Board({'n':num});
+  var rookCounter = 0;
+  var solutionCount = 0;
+  var rowCounter = 0;
+  var row = 0;
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  if (num === 1) {
+    return [[1]];
+  }
+ 
+
+  for (var i = 0; i < num - 1; i++){
+    board.attributes[rowCounter][i] = 0;
+    rowCounter++;
+  } 
+
+  var recurse = function (matrix, rowIndex) {
+  // check if passed matrix is valid  
+    if(rookCounter === num){
+
+      return matrix.rows();
+    }
+
+    for(var col = 0; col < num; col++) {
+      //toggle rook
+      matrix.attributes[rowIndex][col] = 1;
+      //check to see if the current board has any conflicts
+
+      if(matrix.hasAnyColConflicts() || matrix.hasAnyMajorDiagonalConflicts() || matrix.hasAnyMinorDiagonalConflicts()){
+        //due to conflict toggle off rook;
+        matrix.attributes[rowIndex][col] = 0;
+
+      }
+      else {
+  
+        rowIndex++; 
+        rookCounter++;
+
+
+        var result = recurse(matrix, rowIndex); 
+        if(result){
+
+          return result;
+        }
+        rookCounter--;
+        rowIndex--;
+        matrix.attributes[rowIndex][col] = 0;
+
+      }
+
+    }
+    
+  }
+
+
+  solution = recurse(board, row);
+  if(solution === undefined){
+    
+    solution = board.rows();
+    return solution;
+  }
+  console.log('Single solution for ' + num + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
-window.countNQueensSolutions = function(n) {
-  var solution = undefined; //fixme
+window.countNQueensSolutions = function(num) {
+  var solution = []; 
+  var board = new Board({'n':num});
+  var rookCounter = 0;
+  var solutionCount = 0;
+  var rowCounter = 0;
+  var row = 0;
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  if (num === 1) {
+    return 1;
+  }
+ 
+
+  for (var i = 0; i < num - 1; i++){
+    board.attributes[rowCounter][i] = 0;
+    rowCounter++;
+  } 
+
+  var recurse = function (matrix, rowIndex) {
+  // check if passed matrix is valid  
+    if(rookCounter === num){
+      solutionCount++;
+      rowCounter--;
+      return;
+    }
+
+    for(var col = 0; col < num; col++) {
+      //toggle rook
+      matrix.attributes[rowIndex][col] = 1;
+      //check to see if the current board has any conflicts
+
+      if(matrix.hasAnyColConflicts() || matrix.hasAnyMajorDiagonalConflicts() || matrix.hasAnyMinorDiagonalConflicts()){
+        //due to conflict toggle off rook;
+        matrix.attributes[rowIndex][col] = 0;
+
+      }
+      else {
+  
+        rowIndex++; 
+        rookCounter++;
+
+
+        var result = recurse(matrix, rowIndex); 
+        if(result){
+
+          return result;
+        }
+        rookCounter--;
+        rowIndex--;
+        matrix.attributes[rowIndex][col] = 0;
+
+      }
+
+    }
+    
+  }
+
+
+  recurse(board, row);
+
+  console.log('Number of solutions for ' + num + ' queens:', solutionCount);
   return solutionCount;
 };
